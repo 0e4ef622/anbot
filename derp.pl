@@ -106,6 +106,10 @@ my %commands = (
             reply($msg, $ua, $output, $parse_mode);
         }
         unlink "/tmp/$$.snowman";
+    },
+    "info" => sub {
+        my ($ua, $msg) = @_;
+        reply($msg, $ua, "https://github.com/0e4ef622/anbot");
     }
 );
 
