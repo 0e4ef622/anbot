@@ -5,6 +5,8 @@ use warnings;
 
 my $timeout = 200;
 
+use IO::Select;
+
 use JSON;
 use LWP::UserAgent;
 
@@ -15,8 +17,6 @@ open $fh, "<", "apikey" or die "Could not open file `apikey': $!\nPlease place y
 my $apikey = <$fh>;
 chomp $apikey;
 close $fh;
-
-my $ua = LWP::UserAgent->new(timeout => $timeout, keep_alive => 1);
 
 sub api_call {
     my ($ua, $method, $content) = @_;
@@ -147,33 +147,53 @@ sub on_message {
      } elsif ($ltext eq "dorp") {
          reply($msg, $ua, "I agree");
      }
-    printf "%s:%s> %s\n", $msg->{chat}->{title} || $msg->{chat}->{username},
+    printf "%s(%d):%s> %s\n", $msg->{chat}->{title} || $msg->{chat}->{username},
+                        $msg->{chat}->{id},
                         $msg->{from}->{username},
                         $msg->{text};
 }
 
-my $offset = 0;
-while (1) {
-    my $res = api_call($ua, "getUpdates", {
+if (!fork) {
+
+    my $ua = LWP::UserAgent->new(timeout => $timeout, keep_alive => 1);
+    my $offset = 0;
+    while (1) {
+
+        my $res = api_call($ua, "getUpdates", {
                 offset => $offset,
                 timeout => $timeout,
                 allowed_updates => []
             });
 
-    if (not $res->{ok}) {
-        print STDERR "Error (" . $res->{error_code} . ": " . $res->{description};
-        next;
+        if (not $res->{ok}) {
+            print STDERR "Error (" . $res->{error_code} . ": " . $res->{description};
+            next;
+        }
+
+        for my $update (@{ $res->{result} }) {
+            $offset = $update->{update_id} + 1;
+
+            my $msg = $update->{message};
+            next if not defined $msg;
+
+            if (not fork) {
+                on_message($msg);
+                exit 0;
+            }
+        }
     }
+} else {
 
-    for my $update (@{ $res->{result} }) {
-        $offset = $update->{update_id} + 1;
+    #my $select = IO::Select->new();
+    #$select->add(\*STDIN);
+    my $ua = LWP::UserAgent->new();
 
-        my $msg = $update->{message};
-        next if not defined $msg;
+    while (<STDIN>) {
 
-        if (not fork) {
-            on_message($msg);
-            exit 0;
+        if ($_ =~ /^msg (-?\d+) (.+)$/) {
+            send_message(chat_id => $1,
+                    text => $2,
+                    ua => $ua);
         }
     }
 }
