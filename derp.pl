@@ -150,7 +150,7 @@ sub on_message {
     #} elsif (rand() < .01 * scalar($ltext =~ m/\b{wb}(a|а)\b{wb}/g)) {
     } elsif (my $c =()= $ltext =~ m/\b{wb}(a|а)\b{wb}/g) {
 
-        reply($msg, $ua, "an*") if rand() < .05*$c;
+        reply($msg, $ua, "an*") if rand() < .2*$c;
 
     } elsif ($ltext eq "qbec") {
         reply($msg, $ua, "V nterr");
