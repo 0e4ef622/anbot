@@ -76,6 +76,14 @@ sub reply {
                  ua => $ua);
 }
 
+sub kindof_reply {
+    my ($reply_to, $ua, $reply_text, $parse_mode) = @_;
+    send_message(text => $reply_text,
+                 chat_id => $reply_to->{chat}->{id},
+                 parse_mode => $parse_mode,
+                 ua => $ua);
+}
+
 my %commands = (
     "ping" => sub {
         my ($ua, $msg) = @_;
@@ -123,9 +131,7 @@ sub on_message {
     my $text = $msg->{text};
     my $ltext = lc $text;
     if ($ltext =~ m/^\/vim.*wan$/s) {
-        send_message(text => ("​" x (rand() * 5 + 1)) . "d" . ("​" x (rand() * 5 + 1)) . "o" . ("​" x (rand() * 5 + 1)) . "w" . ("​" x (rand() * 5 + 1)) . "s" . ("​" x (rand() * 5 + 1)),
-                     chat_id => $msg->{chat}->{id},
-                     ua => $ua);
+        kindof_reply($msg, $ua, ("​" x (rand() * 5 + 1)) . "d" . ("​" x (rand() * 5 + 1)) . "o" . ("​" x (rand() * 5 + 1)) . "w" . ("​" x (rand() * 5 + 1)) . "s" . ("​" x (rand() * 5 + 1)));
     } elsif ($ltext =~ m/^\/([A-Za-z]+)(?:_\w+)?(\@tehanbot\b)?(?:\s*.*?)?$/s) {
 
         if (defined $commands{$1}) {
@@ -150,6 +156,8 @@ sub on_message {
         reply($msg, $ua, "V nterr");
     } elsif ($ltext eq "dorp") {
         reply($msg, $ua, "I agree");
+    } elsif ($ltext eq "meems") {
+        kindof_reply($msg, $ua, "meems");
     }
     printf "%s(%d):%s> %s\n", $msg->{chat}->{title} || $msg->{chat}->{username},
                         $msg->{chat}->{id},
