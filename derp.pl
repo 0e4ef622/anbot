@@ -122,7 +122,11 @@ sub on_message {
 
     my $text = $msg->{text};
     my $ltext = lc $text;
-    if ($ltext =~ m/^\/([A-Za-z]+)(?:_\w+)?(\@tehanbot\b)?(?:\s*.*?)?$/s) {
+    if ($ltext =~ m/^\/vim.*wan$/s) {
+        send_message(text => ("​" x (rand() * 5 + 1)) . "d" . ("​" x (rand() * 5 + 1)) . "o" . ("​" x (rand() * 5 + 1)) . "w" . ("​" x (rand() * 5 + 1)) . "s" . ("​" x (rand() * 5 + 1)),
+                     chat_id => $msg->{chat}->{id},
+                     ua => $ua);
+    } elsif ($ltext =~ m/^\/([A-Za-z]+)(?:_\w+)?(\@tehanbot\b)?(?:\s*.*?)?$/s) {
 
         if (defined $commands{$1}) {
             $commands{$1}->($ua, $msg);
@@ -142,11 +146,11 @@ sub on_message {
 
         reply($msg, $ua, "an*") if rand() < .05*$c;
 
-     } elsif ($ltext eq "qbec") {
-         reply($msg, $ua, "V nterr");
-     } elsif ($ltext eq "dorp") {
-         reply($msg, $ua, "I agree");
-     }
+    } elsif ($ltext eq "qbec") {
+        reply($msg, $ua, "V nterr");
+    } elsif ($ltext eq "dorp") {
+        reply($msg, $ua, "I agree");
+    }
     printf "%s(%d):%s> %s\n", $msg->{chat}->{title} || $msg->{chat}->{username},
                         $msg->{chat}->{id},
                         $msg->{from}->{username},
