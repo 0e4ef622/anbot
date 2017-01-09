@@ -64,7 +64,14 @@ sub send_message {
     $content->{reply_to_message_id} = $reply_id if defined $reply_id;
     $content->{parse_mode} = $parse_mode if defined $parse_mode;
 
-    api_call($ua, "sendMessage", $content);
+    my $res = api_call($ua, "sendMessage", $content);
+    my $msg = $res->{result};
+
+    printf "%s(%d:%d):%s> %s\n", $msg->{chat}->{title} || $msg->{chat}->{username},
+                        $msg->{chat}->{id},
+                        $msg->{message_id},
+                        $msg->{from}->{username},
+                        $msg->{text};
 }
 
 sub reply {
@@ -159,8 +166,9 @@ sub on_message {
     } elsif ($ltext eq "meems") {
         kindof_reply($msg, $ua, "meems");
     }
-    printf "%s(%d):%s> %s\n", $msg->{chat}->{title} || $msg->{chat}->{username},
+    printf "%s(%d:%d):%s> %s\n", $msg->{chat}->{title} || $msg->{chat}->{username},
                         $msg->{chat}->{id},
+                        $msg->{message_id},
                         $msg->{from}->{username},
                         $msg->{text};
 }
@@ -205,6 +213,11 @@ if (!fork) {
         if ($_ =~ /^msg (-?\d+) (.+)$/) {
             send_message(chat_id => $1,
                     text => $2,
+                    ua => $ua);
+        } elsif ($_ =~ /^reply (-?\d+):(-?\d+) (.+)$/) {
+            send_message(chat_id => $1,
+                    reply_id => $2,
+                    text => $3,
                     ua => $ua);
         }
     }
