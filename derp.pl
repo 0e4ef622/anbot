@@ -154,7 +154,6 @@ sub on_message {
 
         reply($msg, $ua, ".-.") if not $text =~ m/^\%+/;
 
-    #} elsif (rand() < .01 * scalar($ltext =~ m/\b{wb}(a|а)\b{wb}/g)) {
     } elsif (my $c =()= $ltext =~ m/\b{wb}(a|а)\b{wb}/g) {
 
         reply($msg, $ua, "an*") if rand() < .2*$c;
@@ -204,8 +203,6 @@ if (!fork) {
     }
 } else {
 
-    #my $select = IO::Select->new();
-    #$select->add(\*STDIN);
     my $ua = LWP::UserAgent->new();
 
     while (<STDIN>) {
