@@ -195,6 +195,10 @@ if (!fork) {
             my $msg = $update->{message};
             next if not defined $msg;
 
+            rand;
+            # the reason for the existence of the
+            # above line is left as an exercise to
+            # the reader ;)
             if (not fork) {
                 on_message($msg);
                 exit 0;
