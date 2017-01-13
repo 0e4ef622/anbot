@@ -130,12 +130,12 @@ my %commands = (
 
 sub on_message {
     my $msg = $_[0];
-    return unless defined $msg->{text};
+    my $text = $msg->{text} || $msg->{caption};
+    return unless defined $text;
 
     my $ua = LWP::UserAgent->new();
 
 
-    my $text = $msg->{text};
     my $ltext = lc $text;
     if ($ltext =~ m/^\/vim.*wan$/s) {
         kindof_reply($msg, $ua, ("​" x (rand() * 5 + 1)) . "d" . ("​" x (rand() * 5 + 1)) . "o" . ("​" x (rand() * 5 + 1)) . "w" . ("​" x (rand() * 5 + 1)) . "s" . ("​" x (rand() * 5 + 1)));
@@ -169,7 +169,7 @@ sub on_message {
                         $msg->{chat}->{id},
                         $msg->{message_id},
                         $msg->{from}->{username},
-                        $msg->{text};
+                        $text;
 }
 
 if (!fork) {
