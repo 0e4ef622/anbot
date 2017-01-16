@@ -109,7 +109,11 @@ my %commands = (
         print $file $snowman;
         close $file;
 
-        my $output = `timeout -k 5 3 snowman /tmp/$$.snowman 2>&1`;
+        open my $input, '>', "/tmp/$$.snowman.in";
+        print $input $msg->{reply_to_message}->{text};
+        close $input;
+
+        my $output = `timeout -k 5 3 snowman /tmp/$$.snowman < /tmp/$$.snowman.in 2>&1`;
 
         if ($? >> 8 == 124) {
             reply($msg, $ua, "Error: Timeout");
@@ -121,6 +125,7 @@ my %commands = (
             reply($msg, $ua, $output, $parse_mode);
         }
         unlink "/tmp/$$.snowman";
+        unlink "/tmp/$$.snowman.in";
     },
     "info" => sub {
         my ($ua, $msg) = @_;
