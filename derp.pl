@@ -159,6 +159,18 @@ sub on_message {
 
         reply($msg, $ua, ".-.") if not $text =~ m/^\%+/;
 
+    } elsif (defined $msg->{reply_to_message} and
+             $msg->{reply_to_message}->{from}->{username} eq "tehAnBot" and
+             $msg->{reply_to_message}->{text} eq ".-.") {
+
+        reply($msg, $ua, "pls") if $text == "._.";
+
+    } elsif (defined $msg->{reply_to_message} and
+             $msg->{reply_to_message}->{from}->{username} eq "tehAnBot" and
+             $msg->{reply_to_message}->{text} eq "pls") {
+
+        reply($msg, $ua, ":)") if $ltext =~ /\.*pls+\b/m;
+
     } elsif (my $c =()= $ltext =~ m/\b{wb}(a|а)\b{wb}/g) {
 
         reply($msg, $ua, "an*") if rand() < .2*$c;
