@@ -3,6 +3,7 @@ use utf8;
 use strict;
 use warnings;
 
+my $version = "v1.2.1";
 my $timeout = 200;
 
 use IO::Select;
@@ -129,7 +130,9 @@ my %commands = (
     },
     "info" => sub {
         my ($ua, $msg) = @_;
-        reply($msg, $ua, "https://github.com/0e4ef622/anbot");
+        reply($msg, $ua,
+            "https://github.com/0e4ef622/anbot\n" .
+            "Running $version");
     }
 );
 
