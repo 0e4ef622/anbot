@@ -3,7 +3,7 @@ use utf8;
 use strict;
 use warnings;
 
-my $version = "v1.2.1";
+my $version = "v1.2.2";
 my $timeout = 200;
 
 use IO::Select;
@@ -176,7 +176,7 @@ sub on_message {
 
     } elsif (my $c =()= $ltext =~ m/\b{wb}(a|а)\b{wb}/g) {
 
-        reply($msg, $ua, "an*") if rand() < .1*$c;
+        reply($msg, $ua, "an*") if rand() < .05;
 
     } elsif ($ltext eq "qbec") {
         reply($msg, $ua, "V nterr");
