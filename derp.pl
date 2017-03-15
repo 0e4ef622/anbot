@@ -172,7 +172,19 @@ sub on_message {
              $msg->{reply_to_message}->{from}->{username} eq "tehAnBot" and
              $msg->{reply_to_message}->{text} eq "pls") {
 
-        reply($msg, $ua, ":)");
+        reply($msg, $ua, ":)") if $text == "slp";
+
+    } elsif (defined $msg->{reply_to_message} and
+             $msg->{reply_to_message}->{from}->{username} eq "tehAnBot" and
+             $msg->{reply_to_message}->{text} eq ":)") {
+
+        reply($msg, $ua, "mfw") if $text == ":(";
+
+    } elsif (defined $msg->{reply_to_message} and
+             $msg->{reply_to_message}->{from}->{username} eq "tehAnBot" and
+             $msg->{reply_to_message}->{text} eq "mfw") {
+
+        reply($msg, $ua, ".-.") if $text == "tfw";
 
     } elsif (my $c =()= $ltext =~ m/\b{wb}(a|а)\b{wb}/g) {
 
