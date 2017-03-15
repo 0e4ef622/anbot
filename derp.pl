@@ -205,7 +205,7 @@ if (!fork) {
             });
 
         if (not $res->{ok}) {
-            print STDERR "Error (" . $res->{error_code} . ": " . $res->{description};
+            print STDERR "Error " . $res->{error_code} . ": " . $res->{description};
             next;
         }
 
