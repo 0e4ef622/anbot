@@ -2,6 +2,8 @@ Put your api key in an file named `apikey` in the same directory as the script.
 
 This probably doesn't work on Windows, untested on OSX/macOS.
 
+You also need [`snowman`](https://github.com/KeyboardFire/snowman) somewhere in your `$PATH`.
+
 Known Bugs
 ==========
 
