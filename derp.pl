@@ -3,7 +3,7 @@ use utf8;
 use strict;
 use warnings;
 
-my $version = "v1.2.2";
+my $version = "v1.2.3";
 my $timeout = 200;
 
 use IO::Select;
@@ -120,6 +120,8 @@ my %commands = (
             reply($msg, $ua, "Error: Timeout");
         } elsif ($output eq "") {
             reply($msg, $ua, "No output");
+        } elsif (length $output > 4096) {
+            reply($msg, $ua, "Output longer than 4096 characters");
         } else {
             $parse_mode = "markdown" if defined $parse_mode and
                                         $parse_mode eq "md";
