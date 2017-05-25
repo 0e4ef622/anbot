@@ -3,7 +3,7 @@ use utf8;
 use strict;
 use warnings;
 
-my $version = "v1.2.3";
+my $version = "v1.2.4";
 my $timeout = 200;
 
 use IO::Select;
@@ -76,7 +76,8 @@ sub send_message {
 }
 
 sub reply {
-    my ($reply_to, $ua, $reply_text, $parse_mode) = @_;
+    my ($reply_to, $ua, $reply_text, $rot13, $parse_mode) = @_;
+    $rot13 && $reply_text =~ tr/N-ZA-Mn-za-m/A-Za-z/;
     send_message(text => $reply_text,
                  chat_id => $reply_to->{chat}->{id},
                  reply_id => $reply_to->{message_id},
@@ -85,7 +86,8 @@ sub reply {
 }
 
 sub kindof_reply {
-    my ($reply_to, $ua, $reply_text, $parse_mode) = @_;
+    my ($reply_to, $ua, $reply_text, $rot13, $parse_mode) = @_;
+    $rot13 && $reply_text =~ tr/N-ZA-Mn-za-m/A-Za-z/;
     send_message(text => $reply_text,
                  chat_id => $reply_to->{chat}->{id},
                  parse_mode => $parse_mode,
@@ -94,14 +96,14 @@ sub kindof_reply {
 
 my %commands = (
     "ping" => sub {
-        my ($ua, $msg) = @_;
-        reply($msg, $ua, "pong");
+        my ($ua, $msg, $rot13) = @_;
+        reply($msg, $ua, "pong", $rot13);
     },
     "snowman" => sub {
-        my ($ua, $msg) = @_;
+        my ($ua, $msg, $rot13) = @_;
         my ($parse_mode, $snowman) = $msg->{text} =~ m/\/snowman_?(\w+)?\S*\s+(.+)/s;
         if (not defined $snowman) {
-            reply($msg, $ua, "https://github.com/keyboardfire/snowman-lang");
+            reply($msg, $ua, "https://github.com/keyboardfire/snowman-lang", $rot13);
             return;
         }
 
@@ -117,30 +119,35 @@ my %commands = (
         my $output = `timeout -k 5 3 snowman /tmp/$$.snowman < /tmp/$$.snowman.in 2>&1`;
 
         if ($? >> 8 == 124) {
-            reply($msg, $ua, "Error: Timeout");
+            reply($msg, $ua, "Error: Timeout", $rot13);
         } elsif ($output eq "") {
-            reply($msg, $ua, "No output");
+            reply($msg, $ua, "No output", $rot13);
         } elsif (length $output > 4096) {
-            reply($msg, $ua, "Output longer than 4096 characters");
+            reply($msg, $ua, "Output longer than 4096 characters", $rot13);
         } else {
             $parse_mode = "markdown" if defined $parse_mode and
                                         $parse_mode eq "md";
-            reply($msg, $ua, $output, $parse_mode);
+            reply($msg, $ua, $output, $rot13, $parse_mode);
         }
         unlink "/tmp/$$.snowman";
         unlink "/tmp/$$.snowman.in";
     },
     "info" => sub {
-        my ($ua, $msg) = @_;
+        my ($ua, $msg, $rot13) = @_;
         reply($msg, $ua,
             "https://github.com/0e4ef622/anbot\n" .
-            "Running $version");
+            "Running $version", $rot13);
     }
 );
 
+
 sub on_message {
     my $msg = $_[0];
+    my $rot13 = $_[1];
+    $rot13 && $msg->{text} =~ tr/N-ZA-Mn-za-m/A-Za-z/;
+    $rot13 && $msg->{caption} =~ tr/N-ZA-Mn-za-m/A-Za-z/;
     my $text = $msg->{text} || $msg->{caption};
+    my $responded = 0;
     return unless defined $text;
 
     my $ua = LWP::UserAgent->new();
@@ -148,13 +155,14 @@ sub on_message {
 
     my $ltext = lc $text;
     if ($ltext =~ m/^\/vim.*wan$/s) {
-        kindof_reply($msg, $ua, ("​" x (rand() * 5 + 1)) . "d" . ("​" x (rand() * 5 + 1)) . "o" . ("​" x (rand() * 5 + 1)) . "w" . ("​" x (rand() * 5 + 1)) . "s" . ("​" x (rand() * 5 + 1)));
+        kindof_reply($msg, $ua, ("​" x (rand() * 5 + 1)) . "d" . ("​" x (rand() * 5 + 1)) . "o" . ("​" x (rand() * 5 + 1)) . "w" . ("​" x (rand() * 5 + 1)) . "s" . ("​" x (rand() * 5 + 1)), $rot13);
+        $responded = 1;
     } elsif ($ltext =~ m/^\/([A-Za-z]+)(?:_\w+)?(\@tehanbot\b)?(?:\s*.*?)?$/s) {
 
         if (defined $commands{$1}) {
-            $commands{$1}->($ua, $msg);
+            $commands{$1}->($ua, $msg, $rot13);
         } elsif (defined $2) {
-            reply($msg, $ua, "Unknown command /$1");
+            reply($msg, $ua, "Unknown command /$1", $rot13);
         }
 
     } elsif (defined $msg->{reply_to_message} and
@@ -164,11 +172,15 @@ sub on_message {
 
         reply($msg, $ua, ".-.") if not $text =~ m/^\%+/;
 
+        $responded = 1;
+
     } elsif (defined $msg->{reply_to_message} and
              $msg->{reply_to_message}->{from}->{username} eq "tehAnBot" and
              $msg->{reply_to_message}->{text} eq ".-.") {
 
         reply($msg, $ua, "pls") if $text == "._.";
+
+        $responded = 1;
 
     } elsif (defined $msg->{reply_to_message} and
              $msg->{reply_to_message}->{from}->{username} eq "tehAnBot" and
@@ -176,11 +188,15 @@ sub on_message {
 
         reply($msg, $ua, ":)") if $text == "slp";
 
+        $responded = 1;
+
     } elsif (defined $msg->{reply_to_message} and
              $msg->{reply_to_message}->{from}->{username} eq "tehAnBot" and
              $msg->{reply_to_message}->{text} eq ":)") {
 
         reply($msg, $ua, "mfw") if $text == ":(";
+
+        $responded = 1;
 
     } elsif (defined $msg->{reply_to_message} and
              $msg->{reply_to_message}->{from}->{username} eq "tehAnBot" and
@@ -188,22 +204,28 @@ sub on_message {
 
         reply($msg, $ua, ".-.") if $text == "tfw";
 
+        $responded = 1;
+
     } elsif (my $c =()= $ltext =~ m/\b{wb}(a|а)\b{wb}/g) {
 
-        reply($msg, $ua, "an*") if rand() < .05;
+        reply($msg, $ua, "an*", $rot13) if rand() < .05;
 
-    } elsif ($ltext eq "qbec") {
-        reply($msg, $ua, "V nterr");
+        $responded = 1;
+
+#    } elsif ($ltext eq "qbec") {
+#        reply($msg, $ua, "V nterr");
+#        $responded = 1;
     } elsif ($ltext eq "dorp") {
-        reply($msg, $ua, "I agree");
+        reply($msg, $ua, "I agree", $rot13);
+        $responded = 1;
     } elsif ($ltext eq "meems") {
-        kindof_reply($msg, $ua, "meems");
+        kindof_reply($msg, $ua, "meems", $rot13);
+        $responded = 1;
+#    } elsif ($ltext eq "zrrzf") {
+#        kindof_reply($msg, $ua, "zrrzf");
+#        $responded = 1;
     }
-    printf "%s(%d:%d):%s> %s\n", $msg->{chat}->{title} || $msg->{chat}->{username},
-                        $msg->{chat}->{id},
-                        $msg->{message_id},
-                        $msg->{from}->{username},
-                        $text;
+    return $responded;
 }
 
 if (!fork) {
@@ -234,7 +256,12 @@ if (!fork) {
             # above line is left as an exercise to
             # the reader ;)
             if (not fork) {
-                on_message($msg);
+                printf "%s(%d:%d):%s> %s\n", $msg->{chat}->{title} || $msg->{chat}->{username},
+                                             $msg->{chat}->{id},
+                                             $msg->{message_id},
+                                             $msg->{from}->{username},
+                                             $msg->{text} || $msg->{caption};
+                on_message($msg) or on_message($msg, 1);
                 exit 0;
             }
         }
