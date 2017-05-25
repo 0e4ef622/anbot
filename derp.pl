@@ -145,8 +145,7 @@ sub on_message {
     my $msg = $_[0];
     my $rot13 = $_[1];
     $rot13 && $msg->{text} =~ tr/N-ZA-Mn-za-m/A-Za-z/;
-    $rot13 && $msg->{caption} =~ tr/N-ZA-Mn-za-m/A-Za-z/;
-    my $text = $msg->{text} || $msg->{caption};
+    my $text = $msg->{text};
     my $responded = 0;
     return unless defined $text;
 
@@ -256,11 +255,14 @@ if (!fork) {
             # above line is left as an exercise to
             # the reader ;)
             if (not fork) {
+                if (defined $msg->{caption}) {
+                    $msg->{text} = $msg->{caption};
+                }
                 printf "%s(%d:%d):%s> %s\n", $msg->{chat}->{title} || $msg->{chat}->{username},
                                              $msg->{chat}->{id},
                                              $msg->{message_id},
                                              $msg->{from}->{username},
-                                             $msg->{text} || $msg->{caption};
+                                             $msg->{text};
                 on_message($msg) or on_message($msg, 1);
                 exit 0;
             }
