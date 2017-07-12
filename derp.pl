@@ -256,6 +256,9 @@ if (!fork) {
                 if (defined $msg->{caption}) {
                     $msg->{text} = $msg->{caption};
                 }
+                if ($msg->{text} eq "") {
+                    exit 0;
+                }
                 printf "%s(%d:%d):%s> %s\n", $msg->{chat}->{title} || $msg->{chat}->{username},
                                              $msg->{chat}->{id},
                                              $msg->{message_id},
