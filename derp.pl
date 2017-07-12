@@ -6,8 +6,6 @@ use warnings;
 my $version = "v1.2.4";
 my $timeout = 200;
 
-use IO::Select;
-
 use JSON;
 use LWP::UserAgent;
 
@@ -211,18 +209,18 @@ sub on_message {
 
         $responded = 1;
 
-#    } elsif ($ltext eq "qbec") {
-#        reply($msg, $ua, "V nterr");
-#        $responded = 1;
     } elsif ($ltext eq "dorp") {
+
         reply($msg, $ua, "I agree", $rot13);
+
         $responded = 1;
+
     } elsif ($ltext eq "meems") {
+
         kindof_reply($msg, $ua, "meems", $rot13);
+
         $responded = 1;
-#    } elsif ($ltext eq "zrrzf") {
-#        kindof_reply($msg, $ua, "zrrzf");
-#        $responded = 1;
+
     }
     return $responded;
 }
