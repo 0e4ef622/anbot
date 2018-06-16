@@ -175,7 +175,7 @@ sub on_message {
              $msg->{reply_to_message}->{from}->{username} eq "tehAnBot" and
              $msg->{reply_to_message}->{text} eq ".-.") {
 
-        reply($msg, $ua, "pls") if $text == "._.";
+        reply($msg, $ua, "pls") if $text eq "._.";
 
         $responded = 1;
 
@@ -183,7 +183,7 @@ sub on_message {
              $msg->{reply_to_message}->{from}->{username} eq "tehAnBot" and
              $msg->{reply_to_message}->{text} eq "pls") {
 
-        reply($msg, $ua, ":)") if $text == "slp";
+        reply($msg, $ua, ":)") if $text eq "slp";
 
         $responded = 1;
 
@@ -191,7 +191,7 @@ sub on_message {
              $msg->{reply_to_message}->{from}->{username} eq "tehAnBot" and
              $msg->{reply_to_message}->{text} eq ":)") {
 
-        reply($msg, $ua, "mfw") if $text == ":(";
+        reply($msg, $ua, "mfw") if $text eq ":(";
 
         $responded = 1;
 
@@ -199,7 +199,7 @@ sub on_message {
              $msg->{reply_to_message}->{from}->{username} eq "tehAnBot" and
              $msg->{reply_to_message}->{text} eq "mfw") {
 
-        reply($msg, $ua, ".-.") if $text == "tfw";
+        reply($msg, $ua, ".-.") if $text eq "tfw";
 
         $responded = 1;
 
