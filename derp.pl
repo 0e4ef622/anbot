@@ -3,7 +3,7 @@ use utf8;
 use strict;
 use warnings;
 
-my $version = "v1.2.4";
+my $version = "v1.2.5";
 my $timeout = 200;
 
 use JSON;
