@@ -170,37 +170,51 @@ sub on_message {
         my $sim;
         my $csim = 0;
         if (($sim = similarity("flepflap", $c, 0.7)) > 0.7 and $sim < 1.0) {
+            $csim = $sim;
             $text =~ s/^!\w+/!flepflap/;
             $responded = 1;
+        } elsif (($sim = similarity("flipflop", $c, 0.7)) > $csim) {
             $csim = $sim;
-        } elsif (($sim = similarity("flipflop", $c, 0.7)) > $csim and $sim > 0.7 and $sim < 1.0) {
-            $text =~ s/^!\w+/!flipflop/;
-            $responded = 1;
+            if $sim > 0.7 and $sim < 1.0) {
+                $text =~ s/^!\w+/!flipflop/;
+                $responded = 1;
+            }
+        } elsif (($sim = similarity("tgguess", $c, 0.7)) > $csim) {
             $csim = $sim;
-        } elsif (($sim = similarity("tgguess", $c, 0.7)) > $csim and $sim > 0.7 and $sim < 1.0) {
-            $text =~ s/^!\w+/!tgguess/;
-            $responded = 1;
+            if $sim > 0.7 and $sim < 1.0) {
+                $text =~ s/^!\w+/!tgguess/;
+                $responded = 1;
+            }
+        } elsif (($sim = similarity("translate", $c, 0.7)) > $csim) {
             $csim = $sim;
-        } elsif (($sim = similarity("translate", $c, 0.7)) > $csim and $sim > 0.7 and $sim < 1.0) {
-            $text =~ s/^!\w+/!translate/;
-            $responded = 1;
+            if $sim > 0.7 and $sim < 1.0) {
+                $text =~ s/^!\w+/!translate/;
+                $responded = 1;
+            }
+        } elsif (($sim = similarity("frink", $c, 0.7)) > $csim) {
             $csim = $sim;
-        } elsif (($sim = similarity("frink", $c, 0.7)) > $csim and $sim > 0.7 and $sim < 1.0) {
-            $text =~ s/^!\w+/!frink/;
-            $responded = 1;
+            if $sim > 0.7 and $sim < 1.0) {
+                $text =~ s/^!\w+/!frink/;
+                $responded = 1;
+            }
+        } elsif (($sim = similarity("arslan", $c, 0.7)) > $csim) {
             $csim = $sim;
-        } elsif (($sim = similarity("arslan", $c, 0.7)) > $csim and $sim > 0.7 and $sim < 1.0) {
-            $text =~ s/^!\w+/!arslan/;
-            $responded = 1;
+            if $sim > 0.7 and $sim < 1.0) {
+                $text =~ s/^!\w+/!arslan/;
+                $responded = 1;
+            }
+        } elsif (($sim = similarity("expand", $c, 0.7)) > $csim) {
             $csim = $sim;
-        } elsif (($sim = similarity("expand", $c, 0.7)) > $csim and $sim > 0.7 and $sim < 1.0) {
-            $text =~ s/^!\w+/!expand/;
-            $responded = 1;
+            if $sim > 0.7 and $sim < 1.0) {
+                $text =~ s/^!\w+/!expand/;
+                $responded = 1;
+            }
+        } elsif (($sim = similarity("transcribe", $c, 0.7)) > $csim) {
             $csim = $sim;
-        } elsif (($sim = similarity("transcribe", $c, 0.7)) > $csim and $sim > 0.7 and $sim < 1.0) {
-            $text =~ s/^!\w+/!transcribe/;
-            $responded = 1;
-            $csim = $sim;
+            if $sim > 0.7 and $sim < 1.0) {
+                $text =~ s/^!\w+/!transcribe/;
+                $responded = 1;
+            }
         }
         if ($responded) {
             if (defined $msg->{reply_to_message}) {
