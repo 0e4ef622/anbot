@@ -174,6 +174,9 @@ sub on_message {
         } elsif ($sim != 1.0 and ($sim = similarity("flipflop", $c, 0.7)) > 0.7 and $sim < 1.0) {
             $text =~ s/^!\w+/!flipflop/;
             $responded = 1;
+        } elsif ($sim != 1.0 and ($sim = similarity("tgguess", $c, 0.7)) > 0.7 and $sim < 1.0) {
+            $text =~ s/^!\w+/!tgguess/;
+            $responded = 1;
         } elsif ($sim != 1.0 and ($sim = similarity("translate", $c, 0.7)) > 0.7 and $sim < 1.0) {
             $text =~ s/^!\w+/!translate/;
             $responded = 1;
