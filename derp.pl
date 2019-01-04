@@ -201,6 +201,8 @@ sub on_message {
             }
         }
 
+    } elsif ($text =~ m/^You do not have permission to execute/ and defined $msg->{reply_to_message}) {
+        reply($msg, $ua, ">:(");
     } elsif (defined $msg->{reply_to_message} and
              $msg->{reply_to_message}->{from}->{username} eq "tehAnBot" and
              $msg->{reply_to_message}->{text} eq "an*") {
