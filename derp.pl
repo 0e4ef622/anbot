@@ -3,7 +3,7 @@ use utf8;
 use strict;
 use warnings;
 
-my $version = "v1.3.1";
+my $version = "v1.3.2";
 my $timeout = 200;
 
 use JSON;
@@ -168,30 +168,39 @@ sub on_message {
         # I don't care about writing this in a good way because I don't remember
         # perl anymore
         my $sim;
+        my $csim = 0;
         if (($sim = similarity("flepflap", $c, 0.7)) > 0.7 and $sim < 1.0) {
             $text =~ s/^!\w+/!flepflap/;
             $responded = 1;
-        } elsif ($sim != 1.0 and ($sim = similarity("flipflop", $c, 0.7)) > 0.7 and $sim < 1.0) {
+            $csim = $sim;
+        } elsif (($sim = similarity("flipflop", $c, 0.7)) > $csim and $sim > 0.7 and $sim < 1.0) {
             $text =~ s/^!\w+/!flipflop/;
             $responded = 1;
-        } elsif ($sim != 1.0 and ($sim = similarity("tgguess", $c, 0.7)) > 0.7 and $sim < 1.0) {
+            $csim = $sim;
+        } elsif (($sim = similarity("tgguess", $c, 0.7)) > $csim and $sim > 0.7 and $sim < 1.0) {
             $text =~ s/^!\w+/!tgguess/;
             $responded = 1;
-        } elsif ($sim != 1.0 and ($sim = similarity("translate", $c, 0.7)) > 0.7 and $sim < 1.0) {
+            $csim = $sim;
+        } elsif (($sim = similarity("translate", $c, 0.7)) > $csim and $sim > 0.7 and $sim < 1.0) {
             $text =~ s/^!\w+/!translate/;
             $responded = 1;
-        } elsif ($sim != 1.0 and ($sim = similarity("frink", $c, 0.7)) > 0.7 and $sim < 1.0) {
+            $csim = $sim;
+        } elsif (($sim = similarity("frink", $c, 0.7)) > $csim and $sim > 0.7 and $sim < 1.0) {
             $text =~ s/^!\w+/!frink/;
             $responded = 1;
-        } elsif ($sim != 1.0 and ($sim = similarity("arslan", $c, 0.7)) > 0.7 and $sim < 1.0) {
+            $csim = $sim;
+        } elsif (($sim = similarity("arslan", $c, 0.7)) > $csim and $sim > 0.7 and $sim < 1.0) {
             $text =~ s/^!\w+/!arslan/;
             $responded = 1;
-        } elsif ($sim != 1.0 and ($sim = similarity("expand", $c, 0.7)) > 0.7 and $sim < 1.0) {
+            $csim = $sim;
+        } elsif (($sim = similarity("expand", $c, 0.7)) > $csim and $sim > 0.7 and $sim < 1.0) {
             $text =~ s/^!\w+/!expand/;
             $responded = 1;
-        } elsif ($sim != 1.0 and ($sim = similarity("transcribe", $c, 0.7)) > 0.7 and $sim < 1.0) {
+            $csim = $sim;
+        } elsif (($sim = similarity("transcribe", $c, 0.7)) > $csim and $sim > 0.7 and $sim < 1.0) {
             $text =~ s/^!\w+/!transcribe/;
             $responded = 1;
+            $csim = $sim;
         }
         if ($responded) {
             if (defined $msg->{reply_to_message}) {
