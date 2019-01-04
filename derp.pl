@@ -3,7 +3,7 @@ use utf8;
 use strict;
 use warnings;
 
-my $version = "v1.3.0";
+my $version = "v1.3.1";
 my $timeout = 200;
 
 use JSON;
@@ -163,7 +163,7 @@ sub on_message {
             reply($msg, $ua, "Unknown command /$1", $rot13);
         }
 
-    } elsif (not $rot13 and substr($text, 0, 1) eq "!" and my ($c) = $text =~ m/^!(\w+)/) {
+    } elsif (not $rot13 and substr($text, 0, 1) eq "!" and my ($c) = $text =~ m/^!!?(\w+)/) {
 
         # I don't care about writing this in a good way because I don't remember
         # perl anymore
