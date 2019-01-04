@@ -8,6 +8,7 @@ my $timeout = 200;
 
 use JSON;
 use LWP::UserAgent;
+use String::Similarity 'similarity';
 
 $SIG{CHLD} = "IGNORE";
 
@@ -162,6 +163,41 @@ sub on_message {
             reply($msg, $ua, "Unknown command /$1", $rot13);
         }
 
+    } elsif (not $rot13 and substr($text, 0, 1) eq "!" and my ($c) = $text =~ m/^!(\w+)/) {
+
+        # I don't care about writing this in a good way because I don't remember
+        # perl anymore
+        my $sim;
+        if (($sim = similarity("flepflap", $c, 0.7)) > 0.7 and $sim < 1.0) {
+            $text =~ s/^!\w+/!flepflap/;
+            $responded = 1;
+        } elsif ($sim != 1.0 and ($sim = similarity("flipflop", $c, 0.7)) > 0.7 and $sim < 1.0) {
+            $text =~ s/^!\w+/!flipflop/;
+            $responded = 1;
+        } elsif ($sim != 1.0 and ($sim = similarity("translate", $c, 0.7)) > 0.7 and $sim < 1.0) {
+            $text =~ s/^!\w+/!translate/;
+            $responded = 1;
+        } elsif ($sim != 1.0 and ($sim = similarity("frink", $c, 0.7)) > 0.7 and $sim < 1.0) {
+            $text =~ s/^!\w+/!frink/;
+            $responded = 1;
+        } elsif ($sim != 1.0 and ($sim = similarity("arslan", $c, 0.7)) > 0.7 and $sim < 1.0) {
+            $text =~ s/^!\w+/!arslan/;
+            $responded = 1;
+        } elsif ($sim != 1.0 and ($sim = similarity("expand", $c, 0.7)) > 0.7 and $sim < 1.0) {
+            $text =~ s/^!\w+/!expand/;
+            $responded = 1;
+        } elsif ($sim != 1.0 and ($sim = similarity("transcribe", $c, 0.7)) > 0.7 and $sim < 1.0) {
+            $text =~ s/^!\w+/!transcribe/;
+            $responded = 1;
+        }
+        if ($responded) {
+            if (defined $msg->{reply_to_message}) {
+                reply($msg->{reply_to_message}, $ua, $text);
+            } else {
+                kindof_reply($msg, $ua, $text);
+            }
+        }
+
     } elsif (defined $msg->{reply_to_message} and
              $msg->{reply_to_message}->{from}->{username} eq "tehAnBot" and
              $msg->{reply_to_message}->{text} eq "an*") {
@@ -203,9 +239,15 @@ sub on_message {
 
         $responded = 1;
 
-    } elsif (my $c =()= $ltext =~ m/\b{wb}(a|а)\b{wb}/g) {
+    } elsif ($ltext =~ m/\b{wb}(a|а)\b{wb}/g) {
 
         reply($msg, $ua, "an*", $rot13) if rand() < .05;
+
+        $responded = 1;
+
+    } elsif ($ltext =~ m/^(who|what|when|where|why|how)/g) {
+
+        reply($msg, $ua, "GOOD question", $rot13) if rand() < .05;
 
         $responded = 1;
 

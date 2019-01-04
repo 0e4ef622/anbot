@@ -4,6 +4,8 @@ This probably doesn't work on Windows, untested on OSX/macOS.
 
 You also need [`snowman`](https://github.com/KeyboardFire/snowman-lang) somewhere in your `$PATH`.
 
+Other dependencies include perl libraries json, String::Similarity, and lwp-protocol-https.
+
 Run with `perl -CSD derp.pl`
 
 Known Bugs
