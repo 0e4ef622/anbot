@@ -173,47 +173,83 @@ sub on_message {
             $csim = $sim;
             $text =~ s/^!\w+/!flepflap/;
             $responded = 1;
-        } elsif (($sim = similarity("flipflop", $c, 0.7)) > $csim) {
+        }
+        if (($sim = similarity("flipflop", $c, 0.7)) > $csim) {
             $csim = $sim;
-            if $sim > 0.7 and $sim < 1.0) {
+            printf "what\n";
+            if ($sim > 0.7) {
                 $text =~ s/^!\w+/!flipflop/;
-                $responded = 1;
+                if ($sim == 1.0) {
+                    $responded = 0;
+                } else {
+                    $responded = 1;
+                }
             }
-        } elsif (($sim = similarity("tgguess", $c, 0.7)) > $csim) {
+        }
+        if (($sim = similarity("tgguess", $c, 0.7)) > $csim) {
             $csim = $sim;
-            if $sim > 0.7 and $sim < 1.0) {
+            if ($sim > 0.7) {
                 $text =~ s/^!\w+/!tgguess/;
-                $responded = 1;
+                if ($sim == 1.0) {
+                    $responded = 0;
+                } else {
+                    $responded = 1;
+                }
             }
-        } elsif (($sim = similarity("translate", $c, 0.7)) > $csim) {
+        }
+        if (($sim = similarity("translate", $c, 0.7)) > $csim) {
             $csim = $sim;
-            if $sim > 0.7 and $sim < 1.0) {
+            if ($sim > 0.7) {
                 $text =~ s/^!\w+/!translate/;
-                $responded = 1;
+                if ($sim == 1.0) {
+                    $responded = 0;
+                } else {
+                    $responded = 1;
+                }
             }
-        } elsif (($sim = similarity("frink", $c, 0.7)) > $csim) {
+        }
+        if (($sim = similarity("frink", $c, 0.7)) > $csim) {
             $csim = $sim;
-            if $sim > 0.7 and $sim < 1.0) {
+            if ($sim > 0.7) {
                 $text =~ s/^!\w+/!frink/;
-                $responded = 1;
+                if ($sim == 1.0) {
+                    $responded = 0;
+                } else {
+                    $responded = 1;
+                }
             }
-        } elsif (($sim = similarity("arslan", $c, 0.7)) > $csim) {
+        }
+        if (($sim = similarity("arslan", $c, 0.7)) > $csim) {
             $csim = $sim;
-            if $sim > 0.7 and $sim < 1.0) {
+            if ($sim > 0.7) {
                 $text =~ s/^!\w+/!arslan/;
-                $responded = 1;
+                if ($sim == 1.0) {
+                    $responded = 0;
+                } else {
+                    $responded = 1;
+                }
             }
-        } elsif (($sim = similarity("expand", $c, 0.7)) > $csim) {
+        }
+        if (($sim = similarity("expand", $c, 0.7)) > $csim) {
             $csim = $sim;
-            if $sim > 0.7 and $sim < 1.0) {
+            if ($sim > 0.7) {
                 $text =~ s/^!\w+/!expand/;
-                $responded = 1;
+                if ($sim == 1.0) {
+                    $responded = 0;
+                } else {
+                    $responded = 1;
+                }
             }
-        } elsif (($sim = similarity("transcribe", $c, 0.7)) > $csim) {
+        }
+        if (($sim = similarity("transcribe", $c, 0.7)) > $csim) {
             $csim = $sim;
-            if $sim > 0.7 and $sim < 1.0) {
+            if ($sim > 0.7) {
                 $text =~ s/^!\w+/!transcribe/;
-                $responded = 1;
+                if ($sim == 1.0) {
+                    $responded = 0;
+                } else {
+                    $responded = 1;
+                }
             }
         }
         if ($responded) {
