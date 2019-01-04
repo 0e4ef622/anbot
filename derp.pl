@@ -167,18 +167,17 @@ sub on_message {
 
         # I don't care about writing this in a good way because I don't remember
         # perl anymore
-        my $sim;
-        my $csim = 0;
-        if (($sim = similarity("flepflap", $c, 0.7)) > 0.7 and $sim < 1.0) {
-            $csim = $sim;
-            $text =~ s/^!\w+/!flepflap/;
+        my $sim = similarity("flepflap", $c, 0.7);
+        my $csim = $sim;
+        if ($sim > 0.7 and $sim < 1.0) {
+            $text =~ s/^(!!?)\w+/$1flepflap/;
             $responded = 1;
         }
         if (($sim = similarity("flipflop", $c, 0.7)) > $csim) {
             $csim = $sim;
             printf "what\n";
             if ($sim > 0.7) {
-                $text =~ s/^!\w+/!flipflop/;
+                $text =~ s/^(!!?)\w+/$1flipflop/;
                 if ($sim == 1.0) {
                     $responded = 0;
                 } else {
@@ -189,7 +188,7 @@ sub on_message {
         if (($sim = similarity("tgguess", $c, 0.7)) > $csim) {
             $csim = $sim;
             if ($sim > 0.7) {
-                $text =~ s/^!\w+/!tgguess/;
+                $text =~ s/^(!!?)\w+/$1tgguess/;
                 if ($sim == 1.0) {
                     $responded = 0;
                 } else {
@@ -200,7 +199,7 @@ sub on_message {
         if (($sim = similarity("translate", $c, 0.7)) > $csim) {
             $csim = $sim;
             if ($sim > 0.7) {
-                $text =~ s/^!\w+/!translate/;
+                $text =~ s/^(!!?)\w+/$1translate/;
                 if ($sim == 1.0) {
                     $responded = 0;
                 } else {
@@ -211,7 +210,7 @@ sub on_message {
         if (($sim = similarity("frink", $c, 0.7)) > $csim) {
             $csim = $sim;
             if ($sim > 0.7) {
-                $text =~ s/^!\w+/!frink/;
+                $text =~ s/^(!!?)\w+/$1frink/;
                 if ($sim == 1.0) {
                     $responded = 0;
                 } else {
@@ -222,7 +221,7 @@ sub on_message {
         if (($sim = similarity("arslan", $c, 0.7)) > $csim) {
             $csim = $sim;
             if ($sim > 0.7) {
-                $text =~ s/^!\w+/!arslan/;
+                $text =~ s/^(!!?)\w+/$1arslan/;
                 if ($sim == 1.0) {
                     $responded = 0;
                 } else {
@@ -233,7 +232,7 @@ sub on_message {
         if (($sim = similarity("expand", $c, 0.7)) > $csim) {
             $csim = $sim;
             if ($sim > 0.7) {
-                $text =~ s/^!\w+/!expand/;
+                $text =~ s/^(!!?)\w+/$1expand/;
                 if ($sim == 1.0) {
                     $responded = 0;
                 } else {
@@ -244,7 +243,7 @@ sub on_message {
         if (($sim = similarity("transcribe", $c, 0.7)) > $csim) {
             $csim = $sim;
             if ($sim > 0.7) {
-                $text =~ s/^!\w+/!transcribe/;
+                $text =~ s/^(!!?)\w+/$1transcribe/;
                 if ($sim == 1.0) {
                     $responded = 0;
                 } else {
@@ -311,7 +310,7 @@ sub on_message {
 
     } elsif ($ltext =~ m/^(who|what|when|where|why|how)/g) {
 
-        reply($msg, $ua, "GOOD question", $rot13) if rand() < .05;
+        reply($msg, $ua, "GOOD question", $rot13) if rand() < .01;
 
         $responded = 1;
 
