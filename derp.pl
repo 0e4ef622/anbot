@@ -251,6 +251,28 @@ sub on_message {
                 }
             }
         }
+        if (($sim = similarity("Flypflap", $c, 0.7)) > $csim) {
+            $csim = $sim;
+            if ($sim > 0.7) {
+                $text =~ s/^(!!?)\w+/$1Flypflap/;
+                if ($sim == 1.0) {
+                    $responded = 0;
+                } else {
+                    $responded = 1;
+                }
+            }
+        }
+        if (($sim = similarity("soguess", $c, 0.7)) > $csim) {
+            $csim = $sim;
+            if ($sim > 0.7) {
+                $text =~ s/^(!!?)\w+/$1soguess/;
+                if ($sim == 1.0) {
+                    $responded = 0;
+                } else {
+                    $responded = 1;
+                }
+            }
+        }
         if ($responded) {
             if (defined $msg->{reply_to_message}) {
                 reply($msg->{reply_to_message}, $ua, $text);
