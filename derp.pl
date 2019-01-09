@@ -273,6 +273,17 @@ sub on_message {
                 }
             }
         }
+        if (($sim = similarity("seguess", $c, 0.7)) > $csim) {
+            $csim = $sim;
+            if ($sim > 0.7) {
+                $text =~ s/^(!!?)\w+/$1seguess/;
+                if ($sim == 1.0) {
+                    $responded = 0;
+                } else {
+                    $responded = 1;
+                }
+            }
+        }
         if ($responded) {
             if (defined $msg->{reply_to_message}) {
                 reply($msg->{reply_to_message}, $ua, $text);
