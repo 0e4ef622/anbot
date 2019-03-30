@@ -153,7 +153,7 @@ sub on_message {
 
     my $ltext = lc $text;
     if ($ltext =~ m/^\/vim.*wan$/s) {
-        kindof_reply($msg, $ua, ("​" x (rand() * 5 + 1)) . "d" . ("​" x (rand() * 5 + 1)) . "o" . ("​" x (rand() * 5 + 1)) . "w" . ("​" x (rand() * 5 + 1)) . "s" . ("​" x (rand() * 5 + 1)), $rot13);
+        kindof_reply($msg, $ua, ("‌" x (rand() * 5 + 1)) . "d" . ("‌" x (rand() * 5 + 1)) . "o" . ("‌" x (rand() * 5 + 1)) . "w" . ("‌" x (rand() * 5 + 1)) . "s" . ("‌" x (rand() * 5 + 1)), $rot13);
         $responded = 1;
     } elsif ($ltext =~ m/^\/([A-Za-z]+)(?:_\w+)?(\@tehanbot\b)?(?:\s*.*?)?$/s) {
 
