@@ -335,12 +335,6 @@ sub on_message {
 
         $responded = 1;
 
-    } elsif ($ltext =~ m/\b{wb}(a|а)\b{wb}/g) {
-
-        reply($msg, $ua, "an*", $rot13) if rand() < .05;
-
-        $responded = 1;
-
     } elsif ($ltext =~ m/^(who|what|when|where|why|how)/g) {
 
         reply($msg, $ua, "GOOD question", $rot13) if rand() < .01;
