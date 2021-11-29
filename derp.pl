@@ -5,6 +5,7 @@ use warnings;
 
 my $version = "v1.3.2";
 my $timeout = 200;
+my $top_secret = "CAACAgEAAxkBAAIvG2GkRkKeGtcJEfydno909Oz1ppAyAAKWAAM4K5gFvrKVTl2JOcMiBA";
 
 use JSON;
 use LWP::UserAgent;
@@ -74,6 +75,30 @@ sub send_message {
                         $msg->{text};
 }
 
+sub send_sticker {
+    my %args = @_;
+    my $file_id = $args{file_id};
+    my $chat_id = $args{chat_id};
+    my $reply_id = $args{reply_id};
+    my $ua = $args{ua};
+
+    my $content = {
+        chat_id => $chat_id,
+        sticker => $file_id
+    };
+    $content->{reply_to_message_id} = $reply_id if defined $reply_id;
+
+    my $res = api_call($ua, "sendSticker", $content);
+    my $msg = $res->{result};
+
+    printf "%s(%d:%d):%s> {sticker, set_name: \"%s\", file_id: \"%s\"\n", $msg->{chat}->{title} || $msg->{chat}->{username},
+                         $msg->{chat}->{id},
+                         $msg->{message_id},
+                         $msg->{from}->{username},
+                         $msg->{sticker}->{set_name},
+                         $msg->{sticker}->{file_id};
+}
+
 sub reply {
     my ($reply_to, $ua, $reply_text, $rot13, $parse_mode) = @_;
     $rot13 && $reply_text =~ tr/N-ZA-Mn-za-m/A-Za-z/;
@@ -90,6 +115,13 @@ sub kindof_reply {
     send_message(text => $reply_text,
                  chat_id => $reply_to->{chat}->{id},
                  parse_mode => $parse_mode,
+                 ua => $ua);
+}
+
+sub kindof_reply_sticker {
+    my ($reply_to, $ua, $file_id) = @_;
+    send_sticker(file_id => $file_id,
+                 chat_id => $reply_to->{chat}->{id},
                  ua => $ua);
 }
 
@@ -353,6 +385,11 @@ sub on_message {
 
         $responded = 1;
 
+    } elsif ($ltext eq "top secret sticker") {
+
+        kindof_reply_sticker($msg, $ua, $top_secret);
+
+        $responded = 1;
     }
     return $responded;
 }
@@ -388,15 +425,23 @@ if (!fork) {
                 if (defined $msg->{caption}) {
                     $msg->{text} = $msg->{caption};
                 }
-                if ($msg->{text} eq "") {
+                if (defined $msg->{sticker}) {
+                    printf "%s(%d:%d):%s> {sticker, set_name: \"%s\", file_id: \"%s\"\n", $msg->{chat}->{title} || $msg->{chat}->{username},
+                                                 $msg->{chat}->{id},
+                                                 $msg->{message_id},
+                                                 $msg->{from}->{username},
+                                                 $msg->{sticker}->{set_name},
+                                                 $msg->{sticker}->{file_id};
+                } elsif (not defined $msg->{text} or $msg->{text} eq "") {
                     exit 0;
+                } else {
+                    printf "%s(%d:%d):%s> %s\n", $msg->{chat}->{title} || $msg->{chat}->{username},
+                                                 $msg->{chat}->{id},
+                                                 $msg->{message_id},
+                                                 $msg->{from}->{username},
+                                                 $msg->{text};
+                    on_message($msg) or on_message($msg, 1);
                 }
-                printf "%s(%d:%d):%s> %s\n", $msg->{chat}->{title} || $msg->{chat}->{username},
-                                             $msg->{chat}->{id},
-                                             $msg->{message_id},
-                                             $msg->{from}->{username},
-                                             $msg->{text};
-                on_message($msg) or on_message($msg, 1);
                 exit 0;
             }
         }
