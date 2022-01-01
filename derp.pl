@@ -91,7 +91,7 @@ sub send_sticker {
     my $res = api_call($ua, "sendSticker", $content);
     my $msg = $res->{result};
 
-    printf "%s(%d:%d):%s> {sticker, set_name: \"%s\", file_id: \"%s\"\n", $msg->{chat}->{title} || $msg->{chat}->{username},
+    printf "%s(%d:%d):%s> {sticker, set_name: \"%s\", file_id: \"%s\"}\n", $msg->{chat}->{title} || $msg->{chat}->{username},
                          $msg->{chat}->{id},
                          $msg->{message_id},
                          $msg->{from}->{username},
@@ -426,7 +426,7 @@ if (!fork) {
                     $msg->{text} = $msg->{caption};
                 }
                 if (defined $msg->{sticker}) {
-                    printf "%s(%d:%d):%s> {sticker, set_name: \"%s\", file_id: \"%s\"\n", $msg->{chat}->{title} || $msg->{chat}->{username},
+                    printf "%s(%d:%d):%s> {sticker, set_name: \"%s\", file_id: \"%s\"}\n", $msg->{chat}->{title} || $msg->{chat}->{username},
                                                  $msg->{chat}->{id},
                                                  $msg->{message_id},
                                                  $msg->{from}->{username},
