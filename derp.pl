@@ -6,6 +6,7 @@ use warnings;
 my $version = "v1.3.2";
 my $timeout = 200;
 my $top_secret = "CAACAgEAAxkBAAIvG2GkRkKeGtcJEfydno909Oz1ppAyAAKWAAM4K5gFvrKVTl2JOcMiBA";
+my $red_man = "CAACAgEAAxkBAAIvIWI2w_mE8tElPclzhIhrdh-IzE9MAAL3AwACTLrGC7GfcoWGbwJPIwQ";
 
 use JSON;
 use LWP::UserAgent;
@@ -389,6 +390,9 @@ sub on_message {
 
         kindof_reply_sticker($msg, $ua, $top_secret);
 
+        $responded = 1;
+    } elsif ($ltext =~ m/(half)? *(red)? *man drinking( *a? (glass of )?piss)? sticker$/) {
+        kindof_reply_sticker($msg, $ua, $red_man);
         $responded = 1;
     }
     return $responded;
